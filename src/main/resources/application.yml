@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sb-gradle-querydsl
+  datasource:
+    url: jdbc:postgresql://localhost:5432/EMA
+    username: joey
+    password: EmaEma*#7531
+    hikari:
+      jdbc-url: jdbc:postgresql://localhost:5432/EMA
+      username: joey
+      password: EmaEma*#7531
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 600000
+      connection-timeout: 30000
+      max-lifetime: 1800000
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui  # Swagger UI 접근 경로
+    tags-sorter: none
+  #    operations-sorter: method
+  api-docs:
+    path: /api-docs   # Swagger JSON API 문서 경로
