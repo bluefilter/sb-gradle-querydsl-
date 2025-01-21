@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'io.querydsl'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+ext {
+    set('springAiVersion', "1.0.0-M4")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'  // 웹 관련 기능
+    implementation 'org.springframework.ai:spring-ai-postgresml-spring-boot-starter'  // PostgresML 관련 기능
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.1'  // Springdoc OpenAPI 의존성
+    implementation 'org.hibernate.validator:hibernate-validator'
+
+    compileOnly 'org.projectlombok:lombok'  // Lombok 관련 기능
+    runtimeOnly 'org.postgresql:postgresql'  // PostgreSQL JDBC 드라이버
+    annotationProcessor 'org.projectlombok:lombok'  // Lombok 애노테이션 처리기
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'  // JDBC 및 JdbcTemplate 관련 기능 추가
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'  // 테스트 관련 기능
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'  // JUnit 런처
+    testImplementation 'org.mockito:mockito-core:5.0.0'
+}
+
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+    jvmArgs '-javaagent:/absolute/path/to/mockito-agent.jar'
+}
+
