@@ -4,58 +4,139 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
-group = 'io.querydsl'
-version = '0.0.1-SNAPSHOT'
+group = 'io.querydsl'       // 패키지 경로로 사용
+version = '0.0.1-SNAPSHOT'  // 애플리케이션 버전
 
 java {
+    // Java 관련 설정 블록입니다. Java 플러그인이 적용된 경우 사용됩니다.
     toolchain {
+        // Java Toolchain 설정입니다. Gradle이 사용할 JDK 버전을 지정할 수 있습니다.
         languageVersion = JavaLanguageVersion.of(21)
+        // 사용할 Java 언어 버전을 설정합니다.
+        // 여기서는 Java 21 버전을 사용하도록 지정합니다.
     }
 }
+
 
 configurations {
+    // Gradle에서 사용되는 의존성 구성(configuration)을 정의합니다.
     compileOnly {
+        // 'compileOnly' 구성은 컴파일 시에만 필요한 의존성을 포함합니다.
+        // 즉, 컴파일에는 필요하지만 런타임에는 포함되지 않는 라이브러리나 클래스를 정의할 때 사용합니다.
+
         extendsFrom annotationProcessor
+        // 'annotationProcessor' 구성을 상속합니다.
+        // 즉, 애노테이션 프로세서(annotation processor)에서 사용되는 의존성을
+        // 'compileOnly' 구성에서도 사용할 수 있도록 설정합니다.
+        //
+        // 예를 들어, Lombok과 같은 애노테이션 기반 라이브러리를 사용할 때
+        // 'annotationProcessor'에 추가한 Lombok 의존성을 컴파일 시에도 참조할 수 있도록 합니다.
     }
 }
 
+
 repositories {
+    // 의존성을 다운로드할 저장소(repository)를 정의합니다.
+    // Gradle은 이 저장소에서 의존성 라이브러리를 검색하고 다운로드합니다.
+
     mavenCentral()
+    // Maven Central 저장소를 추가합니다.
+    // Maven Central은 가장 널리 사용되는 공용 저장소로, 대부분의 오픈 소스 라이브러리를 제공합니다.
+
     maven { url 'https://repo.spring.io/milestone' }
+    // Spring 프로젝트의 milestone(마일스톤) 저장소를 추가합니다.
+    // 이 저장소는 Spring Framework와 관련된 새로운 기능을 테스트하기 위한
+    // 미리 릴리스된 버전의 라이브러리를 제공합니다.
+    // 안정적인 릴리스가 아닌 실험적인 버전도 포함될 수 있으므로 주의가 필요합니다.
 }
+
 
 ext {
+    // Gradle에서 사용자 정의 속성(property)을 설정하는 블록입니다.
+    // 'ext'는 프로젝트 전역에서 재사용할 수 있는 변수를 정의하기 위해 사용됩니다.
+
     set('springAiVersion', "1.0.0-M4")
+    // 'springAiVersion'이라는 사용자 정의 속성을 정의하고, 값으로 "1.0.0-M4"를 설정합니다.
+    // 이 값은 프로젝트 내 여러 곳에서 참조할 수 있습니다.
+    // 예를 들어, 의존성 버전을 중앙에서 관리하기 위해 사용됩니다.
 }
 
+
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'  // 웹 관련 기능
-    implementation 'org.springframework.ai:spring-ai-postgresml-spring-boot-starter'  // PostgresML 관련 기능
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.1'  // Springdoc OpenAPI 의존성
+    // Spring Boot Starter Web: 웹 애플리케이션을 개발하기 위한 필수 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Spring AI: PostgresML(Spring Boot와 통합) 관련 기능
+    implementation 'org.springframework.ai:spring-ai-postgresml-spring-boot-starter'
+
+    // Springdoc OpenAPI: OpenAPI 3.0 문서화 및 Swagger UI 제공
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.1'
+
+    // Hibernate Validator: 데이터 유효성 검증(Bean Validation API 구현체)
     implementation 'org.hibernate.validator:hibernate-validator'
 
-    compileOnly 'org.projectlombok:lombok'  // Lombok 관련 기능
-    runtimeOnly 'org.postgresql:postgresql'  // PostgreSQL JDBC 드라이버
+    // Lombok: Getter/Setter, 생성자 등을 자동 생성
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'  // Lombok 애노테이션 처리기
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'  // JDBC 및 JdbcTemplate 관련 기능 추가
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'  // 테스트 관련 기능
 
+    // PostgreSQL JDBC 드라이버: PostgreSQL 데이터베이스와 통신을 위한 드라이버
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Spring Boot Starter JDBC: JDBC 및 JdbcTemplate 관련 기능 추가
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+
+    // Spring Boot Starter JPA: JPA 및 Hibernate 지원을 위한 의존성 추가
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Spring Boot Starter Test: Spring Boot 프로젝트 테스트를 위한 필수 의존성
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // JUnit 5 API 및 테스트 엔진
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'  // JUnit 런처
+    // JUnit 런처: 테스트 실행 환경 설정
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Mockito: 목(mock) 객체를 사용한 단위 테스트를 지원
     testImplementation 'org.mockito:mockito-core:5.0.0'
 }
 
 
+
 dependencyManagement {
+    // 의존성 관리를 위한 블록입니다.
+    // 주로 Spring Boot 프로젝트에서 사용되며, 특정 BOM(Bill of Materials)을 가져와
+    // 여러 의존성의 버전을 일관되게 관리할 수 있도록 설정합니다.
+
     imports {
+        // 의존성 관리(import) 설정을 정의합니다.
+
         mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+        // Maven BOM(Bill of Materials)을 가져옵니다.
+        // BOM은 특정 라이브러리의 여러 모듈에 대한 버전을 정의한 파일입니다.
+        // 여기서는 "org.springframework.ai:spring-ai-bom" BOM 파일을 참조하며,
+        // 버전은 앞서 정의한 'springAiVersion' 변수를 사용해 동적으로 설정됩니다.
     }
 }
 
+
 tasks.test {
+    // Gradle에서 테스트 작업(task)을 설정하는 블록입니다.
+    // 'test' 작업은 기본적으로 모든 테스트를 실행하는 역할을 합니다.
+
     useJUnitPlatform()
+    // JUnit Platform을 사용하여 테스트를 실행하도록 설정합니다.
+    // JUnit 5(TestEngine) 기반으로 동작하며, JUnit 4 및 다른 테스트 라이브러리와도 호환됩니다.
+
     jvmArgs '-javaagent:/absolute/path/to/mockito-agent.jar'
+    // 테스트 실행 시 JVM에 전달할 추가 인수를 설정합니다.
+    // 여기서는 '-javaagent' 옵션을 사용하여 Mockito의 에이전트 JAR 파일을 로드합니다.
+    //
+    // - Mockito 에이전트는 Java의 final 클래스를 목(Mock)으로 만들거나,
+    //   private 메서드를 스텁(stub) 처리하는 데 사용됩니다.
+    // - '/absolute/path/to/mockito-agent.jar'는 Mockito 에이전트 JAR 파일의 절대 경로를 나타냅니다.
+    //   테스트 환경에 따라 이 경로를 적절히 변경해야 합니다.
 }
+
 
