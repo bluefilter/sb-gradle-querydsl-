@@ -11,6 +11,7 @@ import io.querydsl.entity.CostcoMember;
 import io.querydsl.entity.QCostcoMember;
 import io.querydsl.repository.CostcoMemberRepository;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,24 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class CostcoMemberService {
-
-    /*
-//    @PersistenceContext
-//    private EntityManager entityManager;  // EntityManager 주입 (jakarta.persistence 사용)
-//    private final QCostcoOrders qCostcoOrders = QCostcoOrders.costcoOrders;
-     */
 
     private final CostcoMemberRepository costcoMemberRepository;
     private final JPAQueryFactory queryFactory;
     private final QCostcoMember qCostcoMember = QCostcoMember.costcoMember;
-
-    @Autowired
-    public CostcoMemberService(CostcoMemberRepository costcoMemberRepository, EntityManager entityManager) {
-        this.costcoMemberRepository = costcoMemberRepository;
-        this.queryFactory = new JPAQueryFactory(entityManager);
-    }
 
     /**
      * 멤버를 등록하는 서비스 메서드
