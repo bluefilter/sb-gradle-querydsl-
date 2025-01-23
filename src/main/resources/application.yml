@@ -5,11 +5,11 @@ spring:
   application:
     name: sb-gradle-querydsl
   datasource:
-    url: jdbc:postgresql://localhost:5432/EMA
+    url: jdbc:postgresql://localhost:5432/costco_data
     username: joey
     password: EmaEma*#7531
     hikari:
-      jdbc-url: jdbc:postgresql://localhost:5432/EMA
+      jdbc-url: jdbc:postgresql://localhost:5432/costco_data
       username: joey
       password: EmaEma*#7531
       maximum-pool-size: 10
