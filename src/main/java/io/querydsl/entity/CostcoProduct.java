@@ -20,6 +20,16 @@ public class CostcoProduct {
     private String name;
 
     private BigDecimal price;
+
+    // 기본 생성자 (JPA에서 필요)
+    protected CostcoProduct() {
+    }
+
+    // 생성자 추가
+    public CostcoProduct(String name, BigDecimal price) {
+        this.name = name;
+        this.price = price;
+    }
 }
 
 
