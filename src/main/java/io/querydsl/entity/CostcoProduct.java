@@ -21,6 +21,11 @@ public class CostcoProduct {
 
     private BigDecimal price;
 
+    @Lob // 대용량 데이터 처리
+    private byte[] image;
+
+    private String imageUrl; // amazon s3
+
     // 기본 생성자 (JPA에서 필요)
     protected CostcoProduct() {
     }
