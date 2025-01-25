@@ -10,6 +10,21 @@ spring:
         use_sql_comments: true  # SQL에 주석을 추가하여, 쿼리의 의미를 더 명확히 함
         generate_statistics: true
 
+
+cloud:
+  aws:
+    credentials:
+      accessKey: test
+      secretKey: test
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucket: screen-shoot
+      url: http://localhost:4566  # LocalStack에 접속하는 URL 추가
+
+
 logging:
   level:
     org:
