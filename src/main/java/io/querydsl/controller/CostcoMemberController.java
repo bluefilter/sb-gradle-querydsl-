@@ -1,13 +1,12 @@
 package io.querydsl.controller;
 
+import io.querydsl.common.PageUtils;
 import io.querydsl.dto.ApiResponseDTO;
 import io.querydsl.dto.CostcoMemberUpdateRequestDTO;
 import io.querydsl.service.CostcoMemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,7 +54,7 @@ public class CostcoMemberController {
             @RequestParam(value = "sort", defaultValue = "id,asc") String sort) {
 
         // Pageable을 생성하는 메서드 호출
-        Pageable pageable = createPageable(page, size, sort);
+        Pageable pageable = PageUtils.createPageable(page, size, sort);
 
         return () -> {
             // 페이지와 정렬 정보 파싱
@@ -66,22 +65,6 @@ public class CostcoMemberController {
 
             return result;
         };
-    }
-
-    /**
-     * 페이지와 정렬 정보를 기반으로 Pageable 객체를 생성하는 메서드
-     */
-    private Pageable createPageable(int page, int size, String sort) {
-        // sort 값을 ',' 기준으로 분리
-        String[] sortParams = sort.split(",");
-        String sortField = sortParams[0];
-        String sortDirection = sortParams.length > 1 ? sortParams[1] : "asc"; // 방향이 없으면 기본값 'asc'로 설정
-
-        // 정렬 방향 결정 (기본적으로 오름차순, desc면 내림차순으로 설정)
-        Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-
-        // Pageable 객체 생성 후 반환
-        return PageRequest.of(page, size, Sort.by(direction, sortField)); // 정렬 필드와 방향 설정
     }
 
     /**
@@ -117,12 +100,12 @@ public class CostcoMemberController {
     @PutMapping("/{id}")
     public Callable<?> updateMember(
             @PathVariable UUID id,
-            @RequestBody CostcoMemberUpdateRequestDTO updateRequest) {
+            @RequestBody CostcoMemberUpdateRequestDTO costcoMemberUpdateRequestDTO) {
 
         return () -> {
             ApiResponseDTO result = new ApiResponseDTO();
 
-            if (costcoMemberService.updateMember(updateRequest)) {
+            if (costcoMemberService.updateMember(id, costcoMemberUpdateRequestDTO)) {
                 result.setMessage("Member updated successfully");  // 수정된 멤버 반환
             } else {
                 result.setMessage("Member not found or update failed");  // 멤버가 없거나 수정 실패

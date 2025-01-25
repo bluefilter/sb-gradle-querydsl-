@@ -65,10 +65,10 @@ public class CostcoProductService {
 
 
     @Transactional
-    public boolean updateProduct(CostcoProductUpdateRequestDTO requestDTO) {
+    public boolean updateProduct(UUID id, CostcoProductUpdateRequestDTO requestDTO) {
         // 멤버 조회
         CostcoProduct cp = queryFactory.selectFrom(qCostcoProduct)
-                .where(qCostcoProduct.id.eq(requestDTO.getId()))
+                .where(qCostcoProduct.id.eq(id))
                 .fetchOne();
 
         if (cp != null) {

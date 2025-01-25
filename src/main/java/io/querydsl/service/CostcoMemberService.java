@@ -2,7 +2,9 @@ package io.querydsl.service;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.ComparableExpressionBase;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.querydsl.dto.CostcoMemberDTO;
 import io.querydsl.dto.CostcoMemberUpdateRequestDTO;
@@ -10,9 +12,7 @@ import io.querydsl.dto.CostcoOrderDTO;
 import io.querydsl.entity.CostcoMember;
 import io.querydsl.entity.QCostcoMember;
 import io.querydsl.repository.CostcoMemberRepository;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -94,7 +94,7 @@ public class CostcoMemberService {
     }
 
     @Transactional
-    public boolean updateMember(CostcoMemberUpdateRequestDTO costcoMemberUpdateRequest) {
+    public boolean updateMember(UUID id, CostcoMemberUpdateRequestDTO costcoMemberUpdateRequest) {
         // 멤버 조회
         CostcoMember member = queryFactory.selectFrom(qCostcoMember)
                 .where(qCostcoMember.id.eq(costcoMemberUpdateRequest.getId()))
