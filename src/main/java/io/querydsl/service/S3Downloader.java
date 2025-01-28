@@ -7,7 +7,6 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,15 +18,14 @@ public class S3Downloader {
     private static final Logger logger = LoggerFactory.getLogger(S3Downloader.class);
 
     private final AmazonS3 amazonS3;
-    private final String bucket;
 
-    public S3Downloader(AmazonS3 amazonS3, @Value("${cloud.aws.s3.bucket}") String bucket) {
+    public S3Downloader(AmazonS3 amazonS3) {
         this.amazonS3 = amazonS3;
-        this.bucket = bucket;
     }
 
+
     // 파일 다운로드
-    public S3Object download(String fileName) {
+    public S3Object download(String bucket, String fileName) {
         // S3에서 파일을 가져옵니다.
         logger.info("S3에서 파일을 다운로드합니다: {}", fileName);
         try {
@@ -38,9 +36,10 @@ public class S3Downloader {
         }
     }
 
+
     // 파일을 InputStream으로 다운로드
-    public InputStream downloadFileAsStream(String fileName) {
-        S3Object s3Object = download(fileName);
+    public InputStream downloadFileAsStream(String bucket, String fileName) {
+        S3Object s3Object = download(bucket, fileName);
 
         // S3Object에서 InputStream을 가져오고 try-with-resources로 처리
         try (S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
@@ -53,13 +52,14 @@ public class S3Downloader {
 
 
     // 파일의 URL을 반환
-    public String getFileUrl(String fileName) {
+    public String getFileUrl(String bucket, String fileName) {
         // S3 파일의 URL을 가져옵니다.
         return amazonS3.getUrl(bucket, fileName).toString();
     }
 
+
     // 파일이 존재하는지 확인
-    public boolean doesFileExist(String fileName) {
+    public boolean doesFileExist(String bucket, String fileName) {
         try {
             amazonS3.getObjectMetadata(bucket, fileName);
             return true;  // 파일이 존재하는 경우
