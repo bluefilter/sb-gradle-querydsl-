@@ -11,19 +11,16 @@ spring:
         generate_statistics: true
 
 
+aws:
+  secrets-manager:
+    secret-name: myapp/aquila
+
 cloud:
   aws:
-    credentials:
-      accessKey: test
-      secretKey: test
     region:
       static: ap-northeast-2
     stack:
       auto: false
-    s3:
-      bucket: screen-shoot
-      url: http://localhost:4566  # LocalStack에 접속하는 URL 추가
-
 
 logging:
   level:

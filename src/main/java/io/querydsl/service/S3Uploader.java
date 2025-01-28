@@ -5,7 +5,6 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,18 +19,16 @@ import java.util.UUID;
 public class S3Uploader {
 
     private final AmazonS3 amazonS3;
-    private final String bucket;
 
     // Logger 객체 생성
     private static final Logger logger = LoggerFactory.getLogger(S3Uploader.class);
 
 
-    public S3Uploader(AmazonS3 amazonS3, @Value("${cloud.aws.s3.bucket}") String bucket) {
+    public S3Uploader(AmazonS3 amazonS3) {
         this.amazonS3 = amazonS3;
-        this.bucket = bucket;
     }
 
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
+    public String upload(MultipartFile multipartFile, String bucketName, String dirName) throws IOException {
         // 파일 이름에서 공백을 제거한 새로운 파일 이름 생성
         String originalFileName = multipartFile.getOriginalFilename();
 
@@ -49,7 +46,7 @@ public class S3Uploader {
 
         File uploadFile = convert(multipartFile);
 
-        String uploadImageUrl = putS3(uploadFile, fileName);
+        String uploadImageUrl = putS3(uploadFile, bucketName, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;
     }
@@ -78,10 +75,10 @@ public class S3Uploader {
         throw new IllegalArgumentException(String.format("파일 변환에 실패했습니다. %s", originalFileName));
     }
 
-    private String putS3(File uploadFile, String fileName) {
-        amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
+    private String putS3(File uploadFile, String bucketName, String fileName) {
+        amazonS3.putObject(new PutObjectRequest(bucketName, fileName, uploadFile)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3.getUrl(bucket, fileName).toString();
+        return amazonS3.getUrl(bucketName, fileName).toString();
     }
 
     private void removeNewFile(File targetFile) {
@@ -92,18 +89,18 @@ public class S3Uploader {
         }
     }
 
-    public void deleteFile(String fileName) {
+    public void deleteFile(String bucketName, String fileName) {
         // URL 디코딩을 통해 원래의 파일 이름을 가져옵니다.
         String decodedFileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8);
         logger.info("Deleting file from S3: {}", decodedFileName);
-        amazonS3.deleteObject(bucket, decodedFileName);
+        amazonS3.deleteObject(bucketName, decodedFileName);
     }
 
-    public String updateFile(MultipartFile newFile, String oldFileName, String dirName) throws IOException {
+    public String updateFile(MultipartFile newFile, String bucketName, String oldFileName, String dirName) throws IOException {
         // 기존 파일 삭제
         logger.info("S3 oldFileName: {}", oldFileName);
-        deleteFile(oldFileName);
+        deleteFile(bucketName, oldFileName);
         // 새 파일 업로드
-        return upload(newFile, dirName);
+        return upload(newFile, bucketName, dirName);
     }
 }
