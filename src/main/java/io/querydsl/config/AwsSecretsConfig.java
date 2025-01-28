@@ -2,6 +2,7 @@ package io.querydsl.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.querydsl.common.AwsSecretsManagerUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,9 +13,12 @@ public class AwsSecretsConfig {
 
     private final AwsSecretsManagerUtil secretsManagerUtil = new AwsSecretsManagerUtil();
 
+    @Value("${aws.secrets-manager.secret-name}")
+    private String secretName; // region.static 값 매핑
+
     @Bean
     public Map<String, String> awsSecrets() {
-        String secretJson = secretsManagerUtil.getSecret("myapp/aquila");
+        String secretJson = secretsManagerUtil.getSecret(secretName);
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();

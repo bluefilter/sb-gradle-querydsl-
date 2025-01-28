@@ -5,6 +5,8 @@ import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
+
+// 실제로 갑을 가져오는지 확인하는 테스트용 코드
 public class SecretsManagerService {
 
     public static void getSecret() {
