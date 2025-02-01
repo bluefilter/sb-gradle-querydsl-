@@ -8,6 +8,7 @@ public class PageUtils {
 
     /**
      * 페이지와 정렬 정보를 기반으로 Pageable 객체를 생성하는 메서드
+     *
      * @param page 페이지 번호 (0부터 시작)
      * @param size 페이지 크기
      * @param sort 정렬 기준 (예: "name,asc" 또는 "price,desc")
