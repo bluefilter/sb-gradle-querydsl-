@@ -3,8 +3,6 @@ package io.querydsl.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
@@ -19,15 +17,13 @@ import java.util.UUID;
 public class CostcoProductThumbnail {
 
     @Id
-    @UuidGenerator
-    @Column(name = "id", updatable = false, nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Lob
-    @Column(name = "thumbnail", nullable = false)
+    @Column(name = "thumbnail")
     private byte[] thumbnail;
 
     @CreationTimestamp

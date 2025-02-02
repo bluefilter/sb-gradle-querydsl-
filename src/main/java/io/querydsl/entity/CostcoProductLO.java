@@ -19,8 +19,7 @@ import java.util.UUID;
 public class CostcoProductLO {
 
     @Id
-    @UuidGenerator
-    @Column(name = "id", updatable = false, nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(name = "name", nullable = false, length = 255)
