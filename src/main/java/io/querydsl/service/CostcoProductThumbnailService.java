@@ -36,5 +36,15 @@ public class CostcoProductThumbnailService {
             throw new NoSuchElementException("해당 ID의 제품을 찾을 수 없습니다: " + id);
         }
     }
+
+    // ✅ 제품 이름과 썸네일 한 번에 수정
+    public CostcoProductThumbnail updateProduct(UUID id, String newName, byte[] newThumbnail) {
+        CostcoProductThumbnail product = repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당 ID의 제품을 찾을 수 없습니다: " + id));
+        product.setName(newName);
+        product.setThumbnail(newThumbnail);
+        return repository.save(product);
+    }
+
 }
 
