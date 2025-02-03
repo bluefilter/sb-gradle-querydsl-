@@ -4,12 +4,19 @@ server:
 spring:
   application:
     name: sb-gradle-querydsl
+  servlet:
+    multipart:
+      enabled: true # 멀티파트 업로드 활성화
+      max-file-size: 2048MB  # 단일 파일 최대 크기
+      max-request-size: 2048MB  # 전체 요청 본문 크기 (여러 파일을 포함한 크기)
   datasource:
-    url: jdbc:postgresql://localhost:5432/costco_data
+    url: jdbc:postgresql://192.168.64.5:5432/costco_data  #utm devian
+#    url: jdbc:postgresql://localhost:5432/costco_data
     username: joey
     password: EmaEma*#7531
     hikari:
-      jdbc-url: jdbc:postgresql://localhost:5432/costco_data
+      jdbc-url: jdbc:postgresql://192.168.64.5:5432/costco_data #utm devian
+#      jdbc-url: jdbc:postgresql://localhost:5432/costco_data
       username: joey
       password: EmaEma*#7531
       maximum-pool-size: 10
